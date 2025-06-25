@@ -3,11 +3,10 @@ import { Types } from "mongoose";
 
 @Schema()
 export class Kids {
-    @Prop({ type: Types.ObjectId })
-    _id: Types.ObjectId;
     @Prop({ required: true })
     name: string;
-    score: number = 0;
+    @Prop({required: false, default: 0})
+    score: number;
 }
 
 export const KidsSchema = SchemaFactory.createForClass(Kids);

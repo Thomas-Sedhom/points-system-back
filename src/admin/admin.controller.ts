@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { AdminService } from "./admin.service";
 
 @Controller('admin')
@@ -12,8 +12,13 @@ export class AdminController {
     return this.adminService.getAllChildren();
   }
 
-  @Post()
-  async editChildScore(@Param('id') id: string, @Param('score') score: number) {
+  @Post("addKid")
+  async addKid(@Body("name") name: string){
+    return this.adminService.addKid(name);
+  }
+
+  @Post("/:id")
+  async editChildScore(@Param('id') id: string, @Body('score') score: number) {
     return this.adminService.editChildScore(id, score);
   }
 }
