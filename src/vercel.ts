@@ -24,7 +24,7 @@ async function bootstrap() {
 
 bootstrap();
 
-export default async function handler(req: any, res: any) {
+async function handler(req: any, res: any) {
   if (!serverHandler) {
     logger.warn('Server handler not ready yet');
     res.statusCode = 502;
@@ -35,4 +35,5 @@ export default async function handler(req: any, res: any) {
   return serverHandler(req, res);
 }
 
-// Do not mix CommonJS `module.exports` with ES modules; keep ESM export only.
+// Export as CommonJS for Vercel's loader to consume safely.
+(module as any).exports = handler;
