@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
-import * as express from 'express';
+import express from 'express';
 import serverless from 'serverless-http';
 import { Logger } from '@nestjs/common';
 
@@ -35,5 +35,4 @@ export default async function handler(req: any, res: any) {
   return serverHandler(req, res);
 }
 
-// For vercel Node builder which expects module.exports
-module.exports = handler;
+// Do not mix CommonJS `module.exports` with ES modules; keep ESM export only.
