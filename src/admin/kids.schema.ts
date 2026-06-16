@@ -2,13 +2,13 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 @Schema({ _id: false })
 export class PointsHistory {
-    @Prop({ required: true })
+    @Prop({ required: true, type: Number })
     points: number;
 
-    @Prop({ required: true })
+    @Prop({ required: true, type: String })
     note: string;
 
-    @Prop({ required: true, default: Date.now })
+    @Prop({ required: true, default: Date.now, type: Date })
     date: Date;
 }
 
