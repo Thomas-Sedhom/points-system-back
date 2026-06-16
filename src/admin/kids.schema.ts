@@ -14,10 +14,10 @@ export class PointsHistory {
 
 @Schema()
 export class Kids {
-    @Prop({ required: true })
+    @Prop({ required: true, type: String })
     name: string;
 
-    @Prop({ required: false, default: 0 })
+    @Prop({ required: false, default: 0, type: Number })
     score: number;
 
     @Prop({ type: [PointsHistory], default: [] })
