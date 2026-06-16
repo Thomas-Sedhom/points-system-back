@@ -18,7 +18,11 @@ export class AdminController {
   }
 
   @Post("/:id")
-  async editChildScore(@Param('id') id: string, @Body('score') score: number) {
-    return this.adminService.editChildScore(id, score);
+  async editChildScore(
+    @Param('id') id: string,
+    @Body('score') score: number,
+    @Body('note') note: string
+  ) {
+    return this.adminService.editChildScore(id, score, note);
   }
 }
