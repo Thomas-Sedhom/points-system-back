@@ -1,0 +1,38 @@
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import * as express from 'express';
+import serverless from 'serverless-http';
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('VercelBootstrap');
+const server = express();
+let serverHandler: any;
+
+async function bootstrap() {
+  try {
+    const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
+    app.enableCors({ origin: true, credentials: true });
+    await app.init();
+    serverHandler = serverless(server);
+    logger.log('Vercel server ready');
+  } catch (err) {
+    logger.error('Failed to bootstrap on Vercel', err?.stack ?? err);
+  }
+}
+
+bootstrap();
+
+export default async function handler(req: any, res: any) {
+  if (!serverHandler) {
+    logger.warn('Server handler not ready yet');
+    res.statusCode = 502;
+    res.end('Server initializing');
+    return;
+  }
+
+  return serverHandler(req, res);
+}
+
+// For vercel Node builder which expects module.exports
+module.exports = handler;
