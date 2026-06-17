@@ -35,9 +35,6 @@ async function handler(req: any, res: any) {
   return serverHandler(req, res);
 }
 
-// Export as CommonJS for Vercel's loader to consume safely.
-(module as any).exports = handler;
-// Provide an ESM-style `config` export so Vercel recognizes configuration
-// while keeping the CommonJS handler export for the runtime loader.
-export const config = { };
-(module as any).exports = handler;
+// Export ESM-compatible handler and config for Vercel
+export default handler;
+export const config = {};
