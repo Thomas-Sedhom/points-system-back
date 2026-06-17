@@ -37,3 +37,6 @@ async function handler(req: any, res: any) {
 
 // Export as CommonJS for Vercel's loader to consume safely.
 (module as any).exports = handler;
+// Attach an empty config object so Vercel recognizes the function's config
+// (you can customize runtime or other options here if needed).
+(module as any).exports.config = { };
