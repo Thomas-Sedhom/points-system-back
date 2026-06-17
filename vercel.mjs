@@ -1,9 +1,8 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
+// Dynamically import the compiled CommonJS handler at runtime. Using dynamic
+// `import()` avoids bundling the CommonJS source into the ESM wrapper which
+// can introduce `module.exports` in an ESM context.
+const loaded = await import('./dist/vercel.js');
+const handler = loaded?.default ?? loaded;
 
-// Load the compiled CommonJS handler produced in `dist/vercel.js`.
-const handler = require('./dist/vercel.js');
-
-// Export ESM-friendly default and config that Vercel expects.
 export default handler;
 export const config = {};
