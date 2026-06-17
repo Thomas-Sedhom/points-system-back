@@ -14,13 +14,24 @@ let bootstrapPromise: Promise<void> | null = null;
 async function bootstrap() {
   try {
     logger.log('Starting NestJS bootstrap...');
+    // Log environment variables (excluding sensitive parts)
+    const mongoUri = process.env.MONGO_URI;
+    if (mongoUri) {
+      const maskedUri = mongoUri.replace(/\/\/.*:.*@/, '//***:***@');
+      logger.log(`MONGO_URI is set: ${maskedUri}`);
+    } else {
+      logger.warn('MONGO_URI is NOT set. Falling back to hardcoded default.');
+    }
+
     const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
     app.enableCors({ origin: true, credentials: true });
     await app.init();
     serverHandler = serverless(server);
     logger.log('NestJS bootstrap complete. Vercel server ready.');
   } catch (err) {
-    logger.error('Failed to bootstrap on Vercel', err?.stack ?? err);
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    const errorStack = err instanceof Error ? err.stack : 'No stack trace';
+    logger.error(`Failed to bootstrap on Vercel: ${errorMsg}`, errorStack);
     throw err;
   }
 }
@@ -35,8 +46,14 @@ async function handler(req: any, res: any) {
       logger.log('Waiting for bootstrap to complete...');
       await bootstrapPromise;
     } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
       res.statusCode = 500;
-      res.end('Internal Server Error: Bootstrap failed');
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({
+        error: 'Bootstrap failed',
+        message: errorMsg,
+        stack: process.env.NODE_ENV === 'development' ? (err instanceof Error ? err.stack : null) : undefined
+      }));
       return;
     }
   }
