@@ -7,8 +7,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Main');
 
-  // Keep Nest's CORS helper but also add explicit middleware to ensure
-  // preflight (OPTIONS) requests get the proper headers on all deployments.
   app.enableCors({
     origin: true,
     credentials: true,
