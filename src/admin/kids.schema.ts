@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Types } from "mongoose";
 
 @Schema({ _id: false })
 export class PointsHistory {
@@ -19,6 +20,9 @@ export class Kids {
 
     @Prop({ required: false, default: 0, type: Number })
     score: number;
+
+    @Prop({ type: Types.ObjectId, ref: 'Team', default: null })
+    teamId: Types.ObjectId;
 
     @Prop({ type: [PointsHistory], default: [] })
     history: PointsHistory[];

@@ -14,14 +14,20 @@ export class AdminController {
   }
 
   @Post("addKid")
-  async addKid(@Body("name") name: string){
-    this.logger.log(`POST /admin/addKid name='${name}'`);
-    try {
-      return await this.adminService.addKid(name);
-    } catch (err) {
-      this.logger.error(`Controller addKid error: ${err?.message ?? err}`);
-      throw err;
-    }
+  async addKid(@Body("name") name: string, @Body("teamId") teamId?: string){
+    this.logger.log(`POST /admin/addKid name='${name}' teamId='${teamId}'`);
+    return this.adminService.addKid(name, teamId);
+  }
+
+  @Post("createTeam")
+  async createTeam(@Body("name") name: string) {
+    this.logger.log(`POST /admin/createTeam name='${name}'`);
+    return this.adminService.createTeam(name);
+  }
+
+  @Get("teams")
+  async getAllTeams() {
+    return this.adminService.getAllTeams();
   }
 
   @Post("/:id")
